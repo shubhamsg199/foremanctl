@@ -11,6 +11,27 @@ foreman_proxy_url: "https://{{ foreman_proxy_name }}:{{ foreman_proxy_https_port
 foreman_proxy_trusted_hosts:
   - "{{ foreman_proxy_name }}"
 
+# DNS common settings
+foreman_proxy_dns_provider: nsupdate
+foreman_proxy_dns_managed: true
+foreman_proxy_dns_server: "127.0.0.1"
+foreman_proxy_dns_ttl: 86400
+foreman_proxy_dns_zone: ""
+foreman_proxy_dns_reverse: ""
+foreman_proxy_dns_forwarders: []
+foreman_proxy_dns_interface: eth0
+foreman_proxy_dns_tsig_keytab: /etc/foreman-proxy/dns.keytab
+foreman_proxy_dns_tsig_principal: ""
+
+# nsupdate provider
+foreman_proxy_dns_key: /etc/rndc.key
+
+# Infoblox DNS plugin
+foreman_proxy_dns_infoblox_dns_server: ""
+foreman_proxy_dns_infoblox_username: ""
+foreman_proxy_dns_infoblox_password: ""
+foreman_proxy_dns_infoblox_dns_view: default
+
 foreman_proxy_base_features:
   - logs
 foreman_proxy_plugins: []

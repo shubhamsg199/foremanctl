@@ -23,6 +23,57 @@ variables:
     action: append_unique
     type: FQDN
     parameter: --certificate-cname
+  foreman_proxy_dns_provider:
+    parameter: --foreman-proxy-dns-provider
+    help: DNS provider.
+    choices:
+      - nsupdate
+      - nsupdate_gss
+      - infoblox
+  foreman_proxy_dns_managed:
+    parameter: --foreman-proxy-dns-managed
+    help: The DNS daemon is managed by foremanctl. Only supported for nsupdate and nsupdate_gss providers.
+    action: store_true
+  foreman_proxy_dns_server:
+    parameter: --foreman-proxy-dns-server
+    help: Address of DNS server to manage.
+  foreman_proxy_dns_ttl:
+    parameter: --foreman-proxy-dns-ttl
+    help: DNS default TTL override.
+  foreman_proxy_dns_zone:
+    parameter: --foreman-proxy-dns-zone
+    help: DNS zone name.
+  foreman_proxy_dns_reverse:
+    parameter: --foreman-proxy-dns-reverse
+    help: DNS reverse zone name.
+  foreman_proxy_dns_forwarders:
+    parameter: --foreman-proxy-dns-forwarders
+    help: DNS forwarders.
+    action: append_unique
+  foreman_proxy_dns_interface:
+    parameter: --foreman-proxy-dns-interface
+    help: DNS interface.
+  foreman_proxy_dns_tsig_keytab:
+    parameter: --foreman-proxy-dns-tsig-keytab
+    help: Kerberos keytab for DNS updates using GSS-TSIG authentication.
+  foreman_proxy_dns_tsig_principal:
+    parameter: --foreman-proxy-dns-tsig-principal
+    help: Kerberos principal for DNS updates using GSS-TSIG authentication.
+  foreman_proxy_dns_key:
+    parameter: --foreman-proxy-dns-key
+    help: Path to the RNDC key file for nsupdate provider.
+  foreman_proxy_dns_infoblox_dns_server:
+    parameter: --foreman-proxy-plugin-dns-infoblox-dns-server
+    help: The address of the Infoblox server.
+  foreman_proxy_dns_infoblox_username:
+    parameter: --foreman-proxy-plugin-dns-infoblox-username
+    help: The username of the Infoblox user.
+  foreman_proxy_dns_infoblox_password:
+    parameter: --foreman-proxy-plugin-dns-infoblox-password
+    help: The password of the Infoblox user.
+  foreman_proxy_dns_infoblox_dns_view:
+    parameter: --foreman-proxy-plugin-dns-infoblox-dns-view
+    help: The Infoblox DNS View.
 
 include:
   - _certificate_source

@@ -1,0 +1,70 @@
+---
+- name: Resolve DNS provider template name
+  ansible.builtin.set_fact:
+    _dns_provider_template: "dns_{{ foreman_proxy_dns_provider }}"
+
+- name: Create provider config secret for {{ _dns_provider_template }}
+  containers.podman.podman_secret:
+    state: present
+    name: foreman-proxy-{{ _dns_provider_template }}-yml
+    data: "{{ lookup('ansible.builtin.template', 'settings.d/' + _dns_provider_template + '.yml.j2') }}"
+  notify:
+    - Restart Foreman Proxy
+    - Refresh Foreman Proxy
+
+- name: Mount provider config secret for {{ _dns_provider_template }}
+  ansible.builtin.copy:
+    dest: /etc/containers/systemd/foreman-proxy.container.d/dns_provider.conf
+    content: |
+      [Container]
+      Secret=foreman-proxy-{{ _dns_provider_template }}-yml,type=mount,target=/etc/foreman-proxy/settings.d/{{ _dns_provider_template }}.yml
+    mode: '0644'
+    owner: root
+    group: root
+  notify:
+    - Restart Foreman Proxy
+    - Refresh Foreman Proxy
+
+- name: Generate RNDC key
+  ansible.builtin.command:
+    cmd: >-
+      podman run --rm --user root
+      -v {{ foreman_proxy_dns_key | dirname }}:{{ foreman_proxy_dns_key | dirname }}:Z
+      {{ foreman_proxy_container_image }}:{{ foreman_proxy_container_tag }}
+      rndc-confgen -a -c {{ foreman_proxy_dns_key }} -k rndc-key
+    creates: "{{ foreman_proxy_dns_key }}"
+  when: foreman_proxy_dns_provider == 'nsupdate'
+
+- name: Set RNDC key file permissions
+  ansible.builtin.file:
+    path: "{{ foreman_proxy_dns_key }}"
+    mode: '0644'
+    owner: root
+    group: root
+  when: foreman_proxy_dns_provider == 'nsupdate'
+
+- name: Mount RNDC key file for nsupdate provider
+  ansible.builtin.copy:
+    dest: /etc/containers/systemd/foreman-proxy.container.d/dns_nsupdate_volumes.conf
+    content: |
+      [Container]
+      Volume={{ foreman_proxy_dns_key }}:{{ foreman_proxy_dns_key }}:ro,z
+    mode: '0644'
+    owner: root
+    group: root
+  when: foreman_proxy_dns_provider == 'nsupdate'
+  notify:
+    - Restart Foreman Proxy
+
+- name: Mount Kerberos keytab for nsupdate_gss provider
+  ansible.builtin.copy:
+    dest: /etc/containers/systemd/foreman-proxy.container.d/dns_nsupdate_gss_volumes.conf
+    content: |
+      [Container]
+      Volume={{ foreman_proxy_dns_tsig_keytab }}:{{ foreman_proxy_dns_tsig_keytab }}:ro,z
+    mode: '0644'
+    owner: root
+    group: root
+  when: foreman_proxy_dns_provider == 'nsupdate_gss'
+  notify:
+    - Restart Foreman Proxy

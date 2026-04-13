@@ -33,3 +33,7 @@ dynflow:
   internal: true
   foreman_proxy:
     plugin_name: dynflow
+dns:
+  description: DNS integration for provisioning
+  foreman_proxy:
+    plugin_name: dns
