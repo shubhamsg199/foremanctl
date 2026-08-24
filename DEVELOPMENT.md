@@ -1,6 +1,6 @@
 # Development Guide
 
-This guide helps you set up foremanctl development enviornment.
+This guide helps you set up foremanctl development environment.
 
 ## Table of Contents
 
@@ -97,7 +97,7 @@ pytest tests/postgresql_test.py
 pytest tests/foreman_test.py::test_foreman_service
 ```
 
-Additonally, you can run [smoker](https://github.com/theforeman/smoker) based tests with:
+Additionally, you can run [smoker](https://github.com/theforeman/smoker) based tests with:
 
 ```
 ./forge smoker

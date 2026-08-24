@@ -419,7 +419,7 @@ For secure connections with certificate verification:
   --database-mode=external \
   --database-host=database.example.com \
   --database-ssl-mode=verify-full \
-  --database-ssl-ca=/path/to/ca-certificate.pem
+  --database-ssl-ca=/path/to/ca-certificate.pem \
   --foreman-database-password=secure_foreman_password \
   --candlepin-database-password=secure_candlepin_password \
   --pulp-database-password=secure_pulp_password
@@ -435,7 +435,7 @@ Before configuring external authentication support, ensure the following require
 - the host machine is enrolled in FreeIPA/IDM or Active Directory realm
 - a keytab for the Kerberos service principal is available at the host machine
 
-### External Database Configuration Parameters
+### External Authentication Configuration Parameters
 
 The external authentication configuration is managed through `foremanctl` command line parameters:
 - `--external-authentication`: Set to `ipa` to enable kerberos authentication in WebUI, set to `ipa_with_api` to enable kerberos authentication in WebUI, API and hammer CLI
